@@ -95,13 +95,25 @@ class SessionDataLoader {
                 entities << createKeyValueEntity([
                         (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_TYPE)   : messages.getMessage(permissionType),
                         (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_NAME)   : permissionName,
-                        (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED): permissionValue.toString()
+                        (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED): getPermissionValueString(permissionType, permissionValue)
                 ] as Map<String, Object>)
             }
         }
         entities
     }
 
+    String getPermissionValueString(PermissionType permissionType, int permissionValue) {
+        if (permissionType == PermissionType.ENTITY_ATTR) {
+            switch (permissionValue) {
+                case 1: 'read-only'; break;
+                case 2: 'modify'; break;
+                default: 'hide'; break;
+            }
+        }
+        else {
+            (permissionValue != 0).toString()
+        }
+    }
 
     private KeyValueEntity createKeyValueEntity(String attribut, Object wert) {
         createKeyValueEntity([

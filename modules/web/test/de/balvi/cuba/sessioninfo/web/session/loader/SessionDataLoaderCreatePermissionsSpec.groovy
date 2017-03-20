@@ -8,6 +8,7 @@ import com.haulmont.cuba.security.global.UserSession
 import de.balvi.cuba.sessioninfo.web.session.SessionDataLoader
 import de.balvi.cuba.sessioninfo.web.session.UserSessionTableColumnNames
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class SessionDataLoaderCreatePermissionsSpec extends Specification {
 
@@ -64,7 +65,7 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
         result.size() == 2
     }
 
-    def "createPermissions copies the permissionType, the name and the allowed value in the KV-entity"() {
+    def "createPermissions copies the permissionType and the name in the KV-entity"() {
 
         given:
         userSession.getPermissionsByType(PermissionType.ENTITY_OP) >> [
@@ -79,9 +80,43 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
 
         then:
         result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_TYPE) == 'entity Op caption'
-
         result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_NAME) == 'permission1'
-        result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED) == '1'
+    }
+
+    def "createPermissions renders true / false for the permission value in case of a permisstionType = ENTITY_OP"() {
+
+        given:
+        userSession.getPermissionsByType(PermissionType.ENTITY_OP) >> [
+                'permission1': 1
+        ]
+
+        when:
+        def result = sut.createPermissions()
+
+        then:
+        result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED) == 'true'
+    }
+
+
+    @Unroll
+    def "createPermissions renders '#renderedValue' for the permission value: '#permissionValue' in case of a permisstionType = ENTITY_OP"() {
+
+        given:
+        userSession.getPermissionsByType(PermissionType.ENTITY_ATTR) >> [
+                'permission1': permissionValue
+        ]
+
+        when:
+        def result = sut.createPermissions()
+
+        then:
+        result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED) == renderedValue
+
+        where:
+        permissionValue || renderedValue
+        1               || 'read-only'
+        2               || 'modify'
+        0               || 'hide'
     }
 
 }
