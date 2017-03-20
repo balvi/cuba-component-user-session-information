@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
+        class="de.balvi.cuba.sessioninfo.gui.screens.ExtSessionBrowser"
+        extends="com/haulmont/cuba/gui/app/security/session/browse/session-browse.xml">
+    <layout>
+        <groupTable id="sessionsTable">
+            <actions>
+                <action id="sessionInfo" caption="msg://sessionInfo" invoke="sessionInfo" ext:index="3" trackSelection="true"/>
+            </actions>
+            <buttonsPanel>
+                <button id="sessionsTableSessionInfoBtn" action="sessionsTable.sessionInfo" ext:index="3"/>
+            </buttonsPanel>
+        </groupTable>
+    </layout>
+</window>

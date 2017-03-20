@@ -14,7 +14,6 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
 
     SessionDataLoader sut
     Messages messages
-    UserSessionSource userSessionSource
     UserSession userSession
     MessageTools messageTools
 
@@ -22,14 +21,11 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
     def setup() {
 
         messages = Mock(Messages)
-        userSessionSource = Mock(UserSessionSource)
         sut = new SessionDataLoader(
                 messages: messages,
-                userSessionSource: userSessionSource,
         )
 
         userSession = Mock(UserSession)
-        userSessionSource.getUserSession() >> userSession
 
         and:
         messageTools = Mock(MessageTools)
@@ -40,7 +36,7 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
     def "createPermissions determines for all permission types the permissions from the user session"() {
 
         when:
-        sut.createPermissions()
+        sut.createPermissions(userSession)
 
         then:
         1 * userSession.getPermissionsByType(PermissionType.ENTITY_OP)
@@ -59,7 +55,7 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
         ]
 
         when:
-        def result = sut.createPermissions()
+        def result = sut.createPermissions(userSession)
 
         then:
         result.size() == 2
@@ -76,7 +72,7 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
         messages.getMessage(PermissionType.ENTITY_OP) >> "entity Op caption"
 
         when:
-        def result = sut.createPermissions()
+        def result = sut.createPermissions(userSession)
 
         then:
         result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_TYPE) == 'entity Op caption'
@@ -91,7 +87,7 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
         ]
 
         when:
-        def result = sut.createPermissions()
+        def result = sut.createPermissions(userSession)
 
         then:
         result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED) == 'true'
@@ -107,7 +103,7 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
         ]
 
         when:
-        def result = sut.createPermissions()
+        def result = sut.createPermissions(userSession)
 
         then:
         result[0].getValue(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED) == renderedValue

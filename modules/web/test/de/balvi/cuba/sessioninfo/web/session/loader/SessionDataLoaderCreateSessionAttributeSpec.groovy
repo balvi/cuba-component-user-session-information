@@ -10,19 +10,13 @@ class SessionDataLoaderCreateSessionAttributeSpec extends Specification {
 
 
     SessionDataLoader sut
-    UserSessionSource userSessionSource
     UserSession userSession
 
 
     def setup() {
 
-        userSessionSource = Mock(UserSessionSource)
-        sut = new SessionDataLoader(
-                userSessionSource: userSessionSource
-        )
-
+        sut = new SessionDataLoader()
         userSession = Mock(UserSession)
-        userSessionSource.getUserSession() >> userSession
 
     }
 
@@ -34,7 +28,7 @@ class SessionDataLoaderCreateSessionAttributeSpec extends Specification {
         and:
         userSession.getAttribute('attribute1') >> 'value1'
         when:
-        def result = sut.createSessionAttribute()
+        def result = sut.createSessionAttribute(userSession)
 
         then:
         result.size() == 1
@@ -51,7 +45,7 @@ class SessionDataLoaderCreateSessionAttributeSpec extends Specification {
         userSession.getAttribute('attribute1') >> 'value1'
         userSession.getAttribute('attribute2') >> 'value2'
         when:
-        def result = sut.createSessionAttribute()
+        def result = sut.createSessionAttribute(userSession)
 
         then:
         result.size() == 2
@@ -68,7 +62,7 @@ class SessionDataLoaderCreateSessionAttributeSpec extends Specification {
         and:
         userSession.getAttribute('attribute1') >> true
         when:
-        def result = sut.createSessionAttribute()
+        def result = sut.createSessionAttribute(userSession)
 
         then:
         result[0].getValue('value') == 'true'
@@ -85,7 +79,7 @@ class SessionDataLoaderCreateSessionAttributeSpec extends Specification {
         userSession.getAttribute('user') >> user
 
         when:
-        def result = sut.createSessionAttribute()
+        def result = sut.createSessionAttribute(userSession)
 
         then:
         result[0].getValue('value') == 'myUser'

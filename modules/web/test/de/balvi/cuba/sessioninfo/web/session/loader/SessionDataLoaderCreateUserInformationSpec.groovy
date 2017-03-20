@@ -16,7 +16,6 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
     SessionDataLoader sut
     Metadata metadata
     Messages messages
-    UserSessionSource userSessionSource
     UserSession userSession
     Group group
     User user
@@ -26,15 +25,12 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
 
         metadata = Mock(Metadata)
         messages = Mock(Messages)
-        userSessionSource = Mock(UserSessionSource)
         sut = new SessionDataLoader(
                 metadata: metadata,
                 messages: messages,
-                userSessionSource: userSessionSource,
         )
 
         userSession = Mock(UserSession)
-        userSessionSource.getUserSession() >> userSession
 
 
         user = Mock(User)
@@ -53,7 +49,7 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
     def "createUserInformation creates a list of KV-Entities with user information"() {
 
         when:
-        def result = sut.createUserInformation()
+        def result = sut.createUserInformation(userSession)
 
         then:
         result.size() == 4
@@ -66,7 +62,7 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
         messages.getMessage(SessionDataLoader, 'tables.userinformation.user') >> "User"
 
         when:
-        def result = sut.createUserInformation()
+        def result = sut.createUserInformation(userSession)
 
         then:
         result[0].getValue("attribute") == "User"
@@ -79,7 +75,7 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
         messages.getMessage(SessionDataLoader, 'tables.userinformation.substitutedUser') >> "Substituted User"
 
         when:
-        def result = sut.createUserInformation()
+        def result = sut.createUserInformation(userSession)
 
         then:
         result[1].getValue("attribute") == "Substituted User"
@@ -97,7 +93,7 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
         userSession.getSubstitutedUser() >> substituierterBenutzer
 
         when:
-        def result = sut.createUserInformation()
+        def result = sut.createUserInformation(userSession)
 
         then:
         result[1].getValue("value") == "My substituted User"
@@ -110,7 +106,7 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
         messages.getMessage(SessionDataLoader, 'tables.userinformation.group') >> "Group"
 
         when:
-        def result = sut.createUserInformation()
+        def result = sut.createUserInformation(userSession)
 
         then:
         result[2].getValue("attribute") == "Group"
@@ -123,7 +119,7 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
         messages.getMessage(SessionDataLoader, 'tables.userinformation.roles') >> "Roles"
 
         when:
-        def result = sut.createUserInformation()
+        def result = sut.createUserInformation(userSession)
 
         then:
         result[3].getValue("attribute") == "Roles"

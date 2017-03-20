@@ -3,6 +3,7 @@ package de.balvi.cuba.sessioninfo.web.session
 import com.haulmont.chile.core.model.MetaClass
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.gui.WindowParam
 import com.haulmont.cuba.gui.components.AbstractWindow
 import com.haulmont.cuba.gui.components.BoxLayout
 import com.haulmont.cuba.gui.components.Table
@@ -30,9 +31,6 @@ class UserSessionInformation extends AbstractWindow {
     Table permissionsTable
 
     @Inject
-    UserSession userSession
-
-    @Inject
     ComponentsFactory componentsFactory
 
     @Inject
@@ -46,8 +44,17 @@ class UserSessionInformation extends AbstractWindow {
 
     // git push -u origin master
 
+    @WindowParam
+    UserSession userSessionToDisplay
+
+    @Inject
+    UserSession userSession
+
+
     @Override
     void init(Map<String, Object> params) {
+
+        userSessionToDisplay = userSessionToDisplay ?: userSession
         def keyValueTableColumns = [
                 (UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME): getMessage('tables.columns.attribute'),
                 (UserSessionTableColumnNames.SESSION_TABLE_COLUMN_VALUE): getMessage('tables.columns.value')
@@ -62,7 +69,7 @@ class UserSessionInformation extends AbstractWindow {
         sessionTableCreator.createTable(
                 userTable,
                 userTableBox,
-                createDatasource(sessionDataLoader.createUserInformation(), tableColumns),
+                createDatasource(sessionDataLoader.createUserInformation(userSessionToDisplay), tableColumns),
                 frame,
                 tableColumns
         )
@@ -72,7 +79,7 @@ class UserSessionInformation extends AbstractWindow {
         sessionTableCreator.createTable(
                 sessionTable,
                 sessionTableBox,
-                createDatasource(sessionDataLoader.createSessionAttribute(), tableColumns),
+                createDatasource(sessionDataLoader.createSessionAttribute(userSessionToDisplay), tableColumns),
                 frame,
                 tableColumns
         )
@@ -87,7 +94,7 @@ class UserSessionInformation extends AbstractWindow {
         sessionTableCreator.createTable(
                 permissionsTable,
                 permissionsTableBox,
-                createDatasource(sessionDataLoader.createPermissions(), permissionTableColumns),
+                createDatasource(sessionDataLoader.createPermissions(userSessionToDisplay), permissionTableColumns),
                 frame,
                 permissionTableColumns
         )
@@ -106,7 +113,7 @@ class UserSessionInformation extends AbstractWindow {
                 whereClause: getPropertyCaption(constraintMetaClass, 'whereClause'),
                 groovyScript: getPropertyCaption(constraintMetaClass, 'groovyScript')
         ]
-        sessionTableCreator.createTable(constraintsTable, constraintsTableBox, createDatasource(sessionDataLoader.createConstraints(), constraintColumns), frame, constraintColumns)
+        sessionTableCreator.createTable(constraintsTable, constraintsTableBox, createDatasource(sessionDataLoader.createConstraints(userSessionToDisplay), constraintColumns), frame, constraintColumns)
     }
 
     protected String getPropertyCaption(MetaClass constraintMetaClass, String propertyName) {

@@ -8,6 +8,7 @@ import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.gui.components.BoxLayout
 import com.haulmont.cuba.gui.components.Frame
 import com.haulmont.cuba.gui.data.impl.ValueCollectionDatasourceImpl
+import com.haulmont.cuba.security.global.UserSession
 import spock.lang.Specification
 
 class UserSessionInformationSpec extends Specification {
@@ -44,6 +45,30 @@ class UserSessionInformationSpec extends Specification {
 
     }
 
+    def "init uses the current user session in case there is no given user session to display"() {
+        given:
+        def currentUserSession = Mock(UserSession)
+        sut.userSession = currentUserSession
+
+        when:
+        sut.init([userSessionToDisplay: null])
+
+        then:
+        1 * sessionDataLoader.createUserInformation(currentUserSession)
+    }
+
+    def "init uses the given user session in case there is one"() {
+        given:
+        def userSessionToDisplay = Mock(UserSession)
+        when:
+        sut.userSessionToDisplay = userSessionToDisplay
+        sut.init()
+
+        then:
+        1 * sessionDataLoader.createUserInformation(userSessionToDisplay)
+    }
+
+
     def "init creates a table for the user information"() {
         given:
         sut.userTableBox = Mock(BoxLayout)
@@ -74,7 +99,7 @@ class UserSessionInformationSpec extends Specification {
         def userDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = userDs
         and:
-        sessionDataLoader.createUserInformation() >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
+        sessionDataLoader.createUserInformation(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
         sut.init()
         then:
@@ -110,7 +135,7 @@ class UserSessionInformationSpec extends Specification {
         def sessionDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = sessionDs
         and:
-        sessionDataLoader.createSessionAttribute() >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
+        sessionDataLoader.createSessionAttribute(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
         sut.init()
         then:
@@ -150,7 +175,7 @@ class UserSessionInformationSpec extends Specification {
         def permissionDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = permissionDs
         and:
-        sessionDataLoader.createPermissions() >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
+        sessionDataLoader.createPermissions(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
         sut.init()
         then:
@@ -198,7 +223,7 @@ class UserSessionInformationSpec extends Specification {
         def permissionDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = permissionDs
         and:
-        sessionDataLoader.createConstraints() >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
+        sessionDataLoader.createConstraints(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
         sut.init()
         then:

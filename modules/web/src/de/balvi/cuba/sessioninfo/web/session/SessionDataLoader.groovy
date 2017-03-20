@@ -3,7 +3,8 @@ package de.balvi.cuba.sessioninfo.web.session
 import com.haulmont.chile.core.model.Instance
 import com.haulmont.cuba.core.entity.Entity
 import com.haulmont.cuba.core.entity.KeyValueEntity
-import com.haulmont.cuba.core.global.*
+import com.haulmont.cuba.core.global.Messages
+import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.security.entity.PermissionType
 import com.haulmont.cuba.security.global.ConstraintData
 import com.haulmont.cuba.security.global.UserSession
@@ -16,24 +17,12 @@ import javax.inject.Inject
 @Component
 class SessionDataLoader {
 
-    @Inject
-    UserSessionSource userSessionSource
+    @Inject Metadata metadata
+    @Inject Messages messages
+    @Inject MetadataHelper metadataHelper
 
-    @Inject
-    Metadata metadata
+    List<KeyValueEntity> createUserInformation(UserSession userSession) {
 
-    @Inject
-    Messages messages
-
-    @Inject
-    MetadataHelper metadataHelper
-
-
-    UserSession getUserSession() {
-        userSessionSource.userSession
-    }
-
-    List<KeyValueEntity> createUserInformation() {
         [
                 createKeyValueEntity(getMessage('tables.userinformation.user'), userSession.user),
                 createKeyValueEntity(getMessage('tables.userinformation.substitutedUser'), userSession.substitutedUser),
@@ -46,7 +35,7 @@ class SessionDataLoader {
         messages.getMessage(getClass(), msgKey)
     }
 
-    List<KeyValueEntity> createSessionAttribute() {
+    List<KeyValueEntity> createSessionAttribute(UserSession userSession) {
         def entities = []
         userSession.attributeNames.each {
             def entity = new KeyValueEntity()
@@ -63,7 +52,7 @@ class SessionDataLoader {
         entities
     }
 
-    List<KeyValueEntity> createConstraints() {
+    List<KeyValueEntity> createConstraints(UserSession userSession) {
         def entities = []
         metadataHelper.entityCaptionMap.each { entityCaption, entityName ->
             def alleConstraints = userSession.getConstraints(entityName)
@@ -86,7 +75,7 @@ class SessionDataLoader {
         ] as Map<String, Object>)
     }
 
-    List<KeyValueEntity> createPermissions() {
+    List<KeyValueEntity> createPermissions(UserSession userSession) {
         def entities = []
         PermissionType.values().each { PermissionType permissionType ->
             def permissions = userSession.getPermissionsByType(permissionType)
@@ -105,9 +94,9 @@ class SessionDataLoader {
     String getPermissionValueString(PermissionType permissionType, int permissionValue) {
         if (permissionType == PermissionType.ENTITY_ATTR) {
             switch (permissionValue) {
-                case 1: 'read-only'; break;
-                case 2: 'modify'; break;
-                default: 'hide'; break;
+                case 1: 'read-only'; break
+                case 2: 'modify'; break
+                default: 'hide'; break
             }
         }
         else {

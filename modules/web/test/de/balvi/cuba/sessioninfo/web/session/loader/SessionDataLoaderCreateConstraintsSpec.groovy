@@ -20,7 +20,6 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
     SessionDataLoader sut
     Metadata metadata
     Messages messages
-    UserSessionSource userSessionSource
     UserSession userSession
     MessageTools messageTools
     MetadataHelper metadataHelper
@@ -30,17 +29,14 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
 
         metadata = Mock(Metadata)
         messages = Mock(Messages)
-        userSessionSource = Mock(UserSessionSource)
         metadataHelper = Mock(MetadataHelper)
         sut = new SessionDataLoader(
                 metadata: metadata,
                 messages: messages,
-                metadataHelper: metadataHelper,
-                userSessionSource: userSessionSource,
+                metadataHelper: metadataHelper
         )
 
         userSession = Mock(UserSession)
-        userSessionSource.getUserSession() >> userSession
 
         def session = Mock(Session)
         session.getClass('sec$Constraint') >> Mock(MetaClass)
@@ -68,7 +64,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         ]
 
         when:
-        sut.createConstraints()
+        sut.createConstraints(userSession)
 
         then:
         1 * userSession.getConstraints('sec$User')
@@ -81,7 +77,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(new Constraint()), new ConstraintData(new Constraint())]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result.size() == 2
@@ -94,7 +90,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('entityName') == 'User (sec$User)'
@@ -110,7 +106,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('operationType') == "all"
@@ -124,7 +120,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('code') == "myCode"
@@ -137,7 +133,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('joinClause') == "myJoinClause"
@@ -150,7 +146,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('groovyScript') == "myGroovyScript"
@@ -166,7 +162,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('checkType') == "DB"
@@ -179,7 +175,7 @@ class SessionDataLoaderCreateConstraintsSpec extends Specification {
         userSession.getConstraints('sec$User') >> [new ConstraintData(constraint)]
 
         when:
-        def result = sut.createConstraints()
+        def result = sut.createConstraints(userSession)
 
         then:
         result[0].getValue('whereClause') == "myWhereClause"
