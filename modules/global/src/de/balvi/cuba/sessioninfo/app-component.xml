@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<app-component xmlns="http://schemas.haulmont.com/cuba/app-component.xsd"
+               dependsOn="com.haulmont.cuba">
+    <module blocks="*"
+            name="global">
+        <artifact appJar="true"
+                  name="sessioninfo-global"/>
+        <property name="cuba.persistenceConfig"
+                  value="+de/balvi/cuba/sessioninfo/persistence.xml"/>
+        <property name="cuba.metadataConfig"
+                  value="+de/balvi/cuba/sessioninfo/metadata.xml"/>
+        <property name="cuba.viewsConfig"
+                  value="+de/balvi/cuba/sessioninfo/views.xml"/>
+    </module>
+    <module blocks="core"
+            dependsOn="global"
+            name="core">
+        <artifact appJar="true"
+                  name="sessioninfo-core"/>
+        <property name="cuba.springContextConfig"
+                  value="+de/balvi/cuba/sessioninfo/spring.xml"/>
+        <property name="cuba.mainMessagePack"
+                  value="+de.balvi.cuba.sessioninfo.core"/>
+        <artifact classifier="db"
+                  configuration="dbscripts"
+                  ext="zip"
+                  name="sessioninfo-core"/>
+    </module>
+    <module blocks="web,desktop"
+            dependsOn="global"
+            name="gui">
+        <artifact appJar="true"
+                  name="sessioninfo-gui"/>
+    </module>
+    <module blocks="web"
+            dependsOn="gui"
+            name="web">
+        <artifact appJar="true"
+                  name="sessioninfo-web"/>
+        <artifact classifier="web"
+                  configuration="webcontent"
+                  ext="zip"
+                  name="sessioninfo-web"/>
+        <property name="cuba.springContextConfig"
+                  value="+de/balvi/cuba/sessioninfo/web-spring.xml"/>
+        <property name="cuba.dispatcherSpringContextConfig"
+                  value="+de/balvi/cuba/sessioninfo/web-dispatcher-spring.xml"/>
+        <property name="cuba.windowConfig"
+                  value="+de/balvi/cuba/sessioninfo/web-screens.xml"/>
+        <property name="cuba.menuConfig"
+                  value="+de/balvi/cuba/sessioninfo/web-menu.xml"/>
+        <property name="cuba.permissionConfig"
+                  value="+de/balvi/cuba/sessioninfo/web-permissions.xml"/>
+        <property name="cuba.mainMessagePack"
+                  value="+de.balvi.cuba.sessioninfo.web"/>
+    </module>
+</app-component>

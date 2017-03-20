@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="de.balvi.cuba.sessioninfo.web.session.UserSessionInformation"
+        messagesPack="de.balvi.cuba.sessioninfo.web.session">
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <tabSheet id="sessionTabSheet"
+                  height="100%">
+
+            <tab id="userTab"
+                 caption="msg://user"
+                 margin="true,false,true,false">
+                <vbox id="userTableBox"
+                      height="100%" />
+            </tab>
+            <tab id="sessionTab"
+                 caption="msg://session"
+                 margin="true,false,true,false">
+                <vbox id="sessionTableBox"
+                      height="100%" />
+            </tab>
+
+            <tab id="constraintsSessionTab"
+                 caption="msg://constraints"
+                 margin="true,false,true,false">
+                <vbox id="constraintsTableBox"
+                      height="100%"/>
+            </tab>
+            <tab id="permissionsSessionTab"
+                 caption="msg://permissions"
+                 margin="true,false,true,false">
+                <vbox id="permissionsTableBox"
+                      height="100%"/>
+            </tab>
+        </tabSheet>
+    </layout>
+</window>
