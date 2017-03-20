@@ -2,4 +2,7 @@
 <screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
     <screen id="sec$UserSessionEntity.browse"
             template="de/balvi/cuba/sessioninfo/gui/screens/ext-session-browse.xml"/>
+
+    <screen id="sessioninfo$userSessionInformation"
+            template="de/balvi/cuba/sessioninfo/gui/session/user-session-information.xml"/>
 </screen-config>

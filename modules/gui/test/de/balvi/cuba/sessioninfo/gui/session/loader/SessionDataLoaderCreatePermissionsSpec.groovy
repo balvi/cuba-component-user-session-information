@@ -1,12 +1,12 @@
-package de.balvi.cuba.sessioninfo.web.session.loader
+package de.balvi.cuba.sessioninfo.gui.session.loader
 
 import com.haulmont.cuba.core.global.MessageTools
 import com.haulmont.cuba.core.global.Messages
 import com.haulmont.cuba.core.global.UserSessionSource
 import com.haulmont.cuba.security.entity.PermissionType
 import com.haulmont.cuba.security.global.UserSession
-import de.balvi.cuba.sessioninfo.web.session.SessionDataLoader
-import de.balvi.cuba.sessioninfo.web.session.UserSessionTableColumnNames
+import de.balvi.cuba.sessioninfo.gui.session.SessionDataLoader
+import de.balvi.cuba.sessioninfo.gui.session.UserSessionTableColumnNames
 import spock.lang.Specification
 import spock.lang.Unroll
 

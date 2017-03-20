@@ -1,18 +1,17 @@
-package de.balvi.cuba.sessioninfo.web.session.loader
+package de.balvi.cuba.sessioninfo.gui.session.loader
 
 import com.haulmont.chile.core.model.MetaClass
 import com.haulmont.chile.core.model.Session
 import com.haulmont.cuba.core.global.MessageTools
 import com.haulmont.cuba.core.global.Messages
 import com.haulmont.cuba.core.global.Metadata
-import com.haulmont.cuba.core.global.UserSessionSource
 import com.haulmont.cuba.security.entity.Constraint
 import com.haulmont.cuba.security.entity.ConstraintCheckType
 import com.haulmont.cuba.security.entity.ConstraintOperationType
 import com.haulmont.cuba.security.global.ConstraintData
 import com.haulmont.cuba.security.global.UserSession
-import de.balvi.cuba.sessioninfo.web.session.MetadataHelper
-import de.balvi.cuba.sessioninfo.web.session.SessionDataLoader
+import de.balvi.cuba.sessioninfo.gui.session.SessionDataLoader
+import de.balvi.cuba.sessioninfo.gui.session.MetadataHelper
 import spock.lang.Specification
 
 class SessionDataLoaderCreateConstraintsSpec extends Specification {

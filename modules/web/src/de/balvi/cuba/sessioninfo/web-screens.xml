@@ -3,6 +3,4 @@
 
     <include file="de/balvi/cuba/sessioninfo/screens.xml"/>
 
-    <screen id="sessioninfo$userSessionInformation"
-            template="de/balvi/cuba/sessioninfo/web/session/user-session-information.xml"/>
 </screen-config>

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
         caption="msg://caption"
-        class="de.balvi.cuba.sessioninfo.web.session.UserSessionInformation"
-        messagesPack="de.balvi.cuba.sessioninfo.web.session">
+        class="de.balvi.cuba.sessioninfo.gui.session.UserSessionInformation"
+        messagesPack="de.balvi.cuba.sessioninfo.gui.session">
     <dialogMode height="600"
-                width="800"/>
+                width="800"
+                forceDialog="true"
+    />
     <layout>
         <tabSheet id="sessionTabSheet"
                   height="100%">

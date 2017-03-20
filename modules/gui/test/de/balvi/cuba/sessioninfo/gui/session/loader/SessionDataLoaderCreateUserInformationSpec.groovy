@@ -1,4 +1,4 @@
-package de.balvi.cuba.sessioninfo.web.session.loader
+package de.balvi.cuba.sessioninfo.gui.session.loader
 
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.Messages
@@ -7,7 +7,7 @@ import com.haulmont.cuba.core.global.UserSessionSource
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.security.global.UserSession
-import de.balvi.cuba.sessioninfo.web.session.SessionDataLoader
+import de.balvi.cuba.sessioninfo.gui.session.SessionDataLoader
 import spock.lang.Specification
 
 class SessionDataLoaderCreateUserInformationSpec extends Specification {

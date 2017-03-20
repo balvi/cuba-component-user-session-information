@@ -1,4 +1,4 @@
-package de.balvi.cuba.sessioninfo.web.session
+package de.balvi.cuba.sessioninfo.gui.session
 
 import com.haulmont.chile.core.model.MetaClass
 import com.haulmont.cuba.core.entity.KeyValueEntity
@@ -16,53 +16,42 @@ import javax.inject.Inject
 
 class UserSessionInformation extends AbstractWindow {
 
-    @Inject
-    protected BoxLayout userTableBox
-    @Inject
-    protected BoxLayout sessionTableBox
-    @Inject
-    protected BoxLayout constraintsTableBox
-    @Inject
-    protected BoxLayout permissionsTableBox
+
+    @Inject ComponentsFactory componentsFactory
+    @Inject Metadata metadata
+    @Inject SessionTableCreator sessionTableCreator
+    @Inject SessionDataLoader sessionDataLoader
+    @Inject UserSession userSession
+
+    @Inject BoxLayout userTableBox
+    @Inject BoxLayout sessionTableBox
+    @Inject BoxLayout constraintsTableBox
+    @Inject BoxLayout permissionsTableBox
+
+    @WindowParam UserSession userSessionToDisplay
 
     Table userTable
     Table sessionTable
     Table constraintsTable
     Table permissionsTable
 
-    @Inject
-    ComponentsFactory componentsFactory
-
-    @Inject
-    Metadata metadata
-
-    @Inject
-    SessionTableCreator sessionTableCreator
-
-    @Inject
-    SessionDataLoader sessionDataLoader
-
-    // git push -u origin master
-
-    @WindowParam
-    UserSession userSessionToDisplay
-
-    @Inject
-    UserSession userSession
-
-
     @Override
     void init(Map<String, Object> params) {
 
         userSessionToDisplay = userSessionToDisplay ?: userSession
+        initCaption()
         def keyValueTableColumns = [
-                (UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME): getMessage('tables.columns.attribute'),
+                (UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME) : getMessage('tables.columns.attribute'),
                 (UserSessionTableColumnNames.SESSION_TABLE_COLUMN_VALUE): getMessage('tables.columns.value')
         ]
         initUserTable(keyValueTableColumns)
         initSessionTable(keyValueTableColumns)
         initConstraintTable()
         initPermissionsTable()
+    }
+
+    protected initCaption() {
+        caption = formatMessage('caption', userSessionToDisplay?.currentOrSubstitutedUser?.instanceName)
     }
 
     protected Table initUserTable(Map<String, String> tableColumns) {
@@ -87,9 +76,9 @@ class UserSessionInformation extends AbstractWindow {
 
     protected Table initPermissionsTable() {
         def permissionTableColumns = [
-                (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_NAME): getMessage('tables.permissions.columns.name'),
+                (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_NAME)   : getMessage('tables.permissions.columns.name'),
                 (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED): getMessage('tables.permissions.columns.allowed'),
-                (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_TYPE): getMessage('tables.permissions.columns.permissionType')
+                (UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_TYPE)   : getMessage('tables.permissions.columns.permissionType')
         ]
         sessionTableCreator.createTable(
                 permissionsTable,

@@ -1,4 +1,4 @@
-package de.balvi.cuba.sessioninfo.web.session
+package de.balvi.cuba.sessioninfo.gui.session
 
 import javax.annotation.Nullable
 

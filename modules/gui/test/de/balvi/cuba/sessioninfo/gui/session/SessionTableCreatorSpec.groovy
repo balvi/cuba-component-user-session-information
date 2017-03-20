@@ -1,4 +1,4 @@
-package de.balvi.cuba.sessioninfo.web.session
+package de.balvi.cuba.sessioninfo.gui.session
 
 import com.haulmont.chile.core.model.MetaClass
 import com.haulmont.chile.core.model.MetaProperty

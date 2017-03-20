@@ -1,4 +1,4 @@
-package de.balvi.cuba.sessioninfo.web.session
+package de.balvi.cuba.sessioninfo.gui.session
 
 import com.haulmont.chile.core.model.Session
 import com.haulmont.cuba.core.entity.KeyValueEntity
@@ -40,7 +40,7 @@ class UserSessionInformationSpec extends Specification {
         )
 
         frame = Mock(Frame)
-        frame.getMessagesPack() >> 'de.balvi.cuba.sessioninfo.web.session'
+        frame.getMessagesPack() >> 'de.balvi.cuba.sessioninfo.gui.session'
         sut.setWrappedFrame(frame)
 
     }
