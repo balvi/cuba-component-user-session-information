@@ -35,23 +35,22 @@ cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
         version = '0.3.0'
-        isSnapshot = true
+        isSnapshot = false
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
     }
     uploadRepository {
         if (cuba.artifact.isSnapshot) {
-            url = System.env.UPLOAD_REPOSITORY_SNAPSHOT
+            url = System.properties['uploadRepositorySnapshot'] ?: System.env.UPLOAD_REPOSITORY_SNAPSHOT
         } else {
-            url = System.env.UPLOAD_REPOSITORY_RELEASE
+            url = System.properties['uploadRepositoryRelease'] ?: System.env.UPLOAD_REPOSITORY_RELEASE
         }
 
-        user = System.env.UPLOAD_REPOSITORY_USERNAME
-        password = System.env.UPLOAD_REPOSITORY_PASSWORD
+        user = System.properties['uploadRepositoryUsername'] ?: System.env.UPLOAD_REPOSITORY_USERNAME
+        password = System.properties['uploadRepositoryPassword'] ?:System.env.UPLOAD_REPOSITORY_PASSWORD
     }
     ide {
-         
         vcs = 'Git'
     }
 }
