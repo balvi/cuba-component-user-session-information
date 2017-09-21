@@ -1,6 +1,6 @@
 
 buildscript {
-    ext.cubaVersion = '6.4.5'
+    ext.cubaVersion = '6.5.7'
     repositories {
         maven {
             url 'https://repo.cuba-platform.com/content/groups/work'
@@ -13,8 +13,6 @@ buildscript {
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
-
-        classpath "com.haulmont.cuba:cuba-global:$cubaVersion"
 
         classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
 
@@ -36,8 +34,8 @@ apply(plugin: 'cuba')
 cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
-        version = '0.2'
-        isSnapshot = false
+        version = '0.2.0'
+        isSnapshot = true
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
@@ -57,6 +55,11 @@ cuba {
         vcs = 'Git'
     }
 }
+
+dependencies {
+    appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
+}
+
 
 def hsql = 'org.hsqldb:hsqldb:2.2.9'
 
