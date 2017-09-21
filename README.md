@@ -9,10 +9,48 @@ CUBA component that shows detailed information about user sessions. The main pur
 * Constraints
 * Permissions
 
-### Information on all current session for administration
+
+## Installation
+
+1. Add the following maven repository `https://dl.bintray.com/balvi/cuba-components` to the build.gradle of your CUBA application:
+
+
+    buildscript {
+        
+        //...
+        
+        repositories {
+        
+            // ...
+        
+            maven {
+                url  "https://dl.bintray.com/balvi/cuba-components"
+            }
+        }
+        
+        // ...
+    }
+
+2. Select a version of the add-on which is compatible with the platform version used in your project:
+
+| Platform Version | Add-on Version |
+| ---------------- | -------------- |
+| 6.6.x            | 0.3.x          |
+| 6.5.x            | 0.2.x          |
+| 6.4.x            | 0.1.x          |
+
+The latest version is: `0.3.0`
+
+Add custom application component to your project:
+
+* Artifact group: `de.balvi.cuba.sessioninfo`
+* Artifact name: `sessioninfo-global`
+* Version: *add-on version*
+
+## Information on all current session for administration
 The app components extends the `Administration > User Sessions` screen so that for all currently active session, the detailed session information can be retrieved.
 
-### Own session information for every user
+## Own session information for every user
 The user has the ability to display information about its current session via `Help > Current User Session`.
 
 ![Screenshot user session information](https://github.com/balvi/cuba-component-user-session-information/blob/master/img/user-session-information.png)
