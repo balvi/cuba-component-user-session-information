@@ -31,11 +31,13 @@ def servletApi = 'org.apache.tomcat:tomcat-servlet-api:8.0.26'
 apply(plugin: 'idea')
 apply(plugin: 'cuba')
 
+def bintrayRepositoryUrl = "https://api.bintray.com/maven/balvi/cuba-components/cuba-component-user-session-information/;publish=1"
+
 cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
-        version = '0.3.0'
-        isSnapshot = false
+        version = '0.4.0'
+        isSnapshot = true
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
@@ -44,7 +46,7 @@ cuba {
         if (cuba.artifact.isSnapshot) {
             url = System.properties['uploadRepositorySnapshot'] ?: System.env.UPLOAD_REPOSITORY_SNAPSHOT
         } else {
-            url = System.properties['uploadRepositoryRelease'] ?: System.env.UPLOAD_REPOSITORY_RELEASE
+            url = System.properties['uploadRepositoryRelease'] ?: System.env.UPLOAD_REPOSITORY_RELEASE ?: bintrayRepositoryUrl
         }
 
         user = System.properties['uploadRepositoryUsername'] ?: System.env.UPLOAD_REPOSITORY_USERNAME
