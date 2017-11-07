@@ -8,4 +8,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [0.4.0 - 7.11.2017]
 
 ### Dependencies
-- CUBA 6.7.1
+- CUBA 6.7.2

@@ -36,8 +36,8 @@ def bintrayRepositoryUrl = "https://api.bintray.com/maven/balvi/cuba-components/
 cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
-        version = '0.4.0'
-        isSnapshot = false
+        version = '0.4.1'
+        isSnapshot = true
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
@@ -297,7 +297,7 @@ task restart(dependsOn: ['stop', ':sessioninfo-core:deploy', ':sessioninfo-web:d
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.4'
+    gradleVersion = '3.5'
 }
 
 apply from: 'extra.gradle'
