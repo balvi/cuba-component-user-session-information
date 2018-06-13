@@ -1,5 +1,5 @@
 buildscript {
-    ext.cubaVersion = '6.8.0'
+    ext.cubaVersion = '6.9.0'
     repositories {
         maven {
             url 'https://repo.cuba-platform.com/content/groups/work'
@@ -24,7 +24,7 @@ def coreModule = project(':sessioninfo-core')
 def guiModule = project(':sessioninfo-gui')
 def webModule = project(':sessioninfo-web')
 
-def servletApi = 'org.apache.tomcat:tomcat-servlet-api:8.0.26'
+def servletApi = 'javax.servlet:javax.servlet-api:3.1.0'
 
 
 apply(plugin: 'idea')
@@ -35,7 +35,7 @@ def bintrayRepositoryUrl = "https://api.bintray.com/maven/balvi/cuba-components/
 cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
-        version = '0.5.0'
+        version = '0.6.0'
         isSnapshot = false
     }
     tomcat {

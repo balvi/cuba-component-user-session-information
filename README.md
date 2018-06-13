@@ -35,6 +35,7 @@ CUBA component that shows detailed information about user sessions. The main pur
 
 | Platform Version | Add-on Version |
 | ---------------- | -------------- |
+| 6.9.x            | 0.6.x          |
 | 6.8.x            | 0.5.x          |
 | 6.6.x            | 0.3.x          |
 | 6.5.x            | 0.2.x          |
