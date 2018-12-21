@@ -1,5 +1,5 @@
 buildscript {
-    ext.cubaVersion = '6.9.0'
+    ext.cubaVersion = '6.10.5'
     repositories {
         maven {
             url 'https://repo.cuba-platform.com/content/groups/work'
@@ -35,7 +35,7 @@ def bintrayRepositoryUrl = "https://api.bintray.com/maven/balvi/cuba-components/
 cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
-        version = '0.6.0'
+        version = '0.7.0'
         isSnapshot = false
     }
     tomcat {
@@ -158,7 +158,9 @@ configure([globalModule, coreModule, guiModule, webModule]) {
 
 
 configure(globalModule) {
-    task enhance(type: CubaEnhancing)
+    entitiesEnhancing {
+        main { enabled = true }
+    }
 
 
     jar {
