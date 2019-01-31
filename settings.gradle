@@ -1,6 +1,7 @@
 rootProject.name = 'cuba-component-user-session-information'
-include(':sessioninfo-global', ':sessioninfo-core', ':sessioninfo-gui', ':sessioninfo-web')
-project(':sessioninfo-global').projectDir = new File(settingsDir, 'modules/global')
-project(':sessioninfo-core').projectDir = new File(settingsDir, 'modules/core')
-project(':sessioninfo-gui').projectDir = new File(settingsDir, 'modules/gui')
-project(':sessioninfo-web').projectDir = new File(settingsDir, 'modules/web')
+def modulePrefix = 'sessioninfo'
+include(":${modulePrefix}-global" , ":${modulePrefix}-core" , ":${modulePrefix}-gui" , ":${modulePrefix}-web" )
+project(":${modulePrefix}-global" ).projectDir = new File(settingsDir, 'modules/global')
+project(":${modulePrefix}-core" ).projectDir = new File(settingsDir, 'modules/core')
+project(":${modulePrefix}-gui" ).projectDir = new File(settingsDir, 'modules/gui')
+project(":${modulePrefix}-web" ).projectDir = new File(settingsDir, 'modules/web')

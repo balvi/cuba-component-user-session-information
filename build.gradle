@@ -12,20 +12,18 @@ buildscript {
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
-
         classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
-
-
     }
 }
 
-def globalModule = project(':sessioninfo-global')
-def coreModule = project(':sessioninfo-core')
-def guiModule = project(':sessioninfo-gui')
-def webModule = project(':sessioninfo-web')
+def modulePrefix = 'sessioninfo'
+
+def globalModule = project(":${modulePrefix}-global" )
+def coreModule = project(":${modulePrefix}-core" )
+def guiModule = project(":${modulePrefix}-gui" )
+def webModule = project(":${modulePrefix}-web" )
 
 def servletApi = 'javax.servlet:javax.servlet-api:3.1.0'
-
 
 apply(plugin: 'idea')
 apply(plugin: 'cuba')
@@ -189,7 +187,7 @@ configure(coreModule) {
 
     task cleanConf(description: 'Cleans up conf directory') {
         doLast {
-            def dir = new File(cuba.tomcat.dir, '/conf/sessioninfo-core')
+            def dir = new File(cuba.tomcat.dir, "/conf/${modulePrefix}-core" )
             if (dir.isDirectory()) {
                 ant.delete(includeemptydirs: true) {
                     fileset(dir: dir, includes: '**/*', excludes: 'local.app.properties')
@@ -199,8 +197,8 @@ configure(coreModule) {
     }
 
     task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
-        appName = 'sessioninfo-core'
-        appJars('sessioninfo-global', 'sessioninfo-core')
+        appName = "${modulePrefix}-core"
+        appJars(modulePrefix + '-global', modulePrefix + '-core')
     }
 
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
@@ -229,7 +227,7 @@ configure(guiModule) {
     task deployConf(type: Copy) {
         from file('src')
         include "de/balvi/cuba/sessioninfo/**"
-        into "$cuba.tomcat.dir/conf/sessioninfo"
+        into "$cuba.tomcat.dir/conf/${modulePrefix}"
     }
 }
 
@@ -257,17 +255,17 @@ configure(webModule) {
     task deployConf(type: Copy) {
         from file('src')
         include "de/balvi/cuba/sessioninfo/**"
-        into "$cuba.tomcat.dir/conf/sessioninfo"
+        into "$cuba.tomcat.dir/conf/${modulePrefix}"
     }
 
     task clearMessagesCache(type: CubaClearMessagesCache) {
-        appName = 'sessioninfo'
+        appName = "${modulePrefix}"
     }
     deployConf.dependsOn clearMessagesCache
 
     task cleanConf(description: 'Cleans up conf directory') {
         doLast {
-            def dir = new File(cuba.tomcat.dir, '/conf/sessioninfo')
+            def dir = new File(cuba.tomcat.dir, "/conf/${modulePrefix}" )
             if (dir.isDirectory()) {
                 ant.delete(includeemptydirs: true) {
                     fileset(dir: dir, includes: '**/*', excludes: 'local.app.properties')
@@ -277,8 +275,8 @@ configure(webModule) {
     }
 
     task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
-        appName = 'sessioninfo'
-        appJars('sessioninfo-global', 'sessioninfo-gui', 'sessioninfo-web')
+        appName = "${modulePrefix}"
+        appJars(modulePrefix + '-global', modulePrefix + '-gui', modulePrefix + '-web')
     }
 }
 
@@ -286,13 +284,13 @@ configure(webModule) {
 
 
 
-task undeploy(type: Delete, dependsOn: ':sessioninfo-web:cleanConf') {
+task undeploy(type: Delete, dependsOn: ":${modulePrefix}-web:cleanConf" ) {
     delete("$cuba.tomcat.dir/shared")
-    delete("$cuba.tomcat.dir/webapps/sessioninfo-core")
-    delete("$cuba.tomcat.dir/webapps/sessioninfo")
+    delete("$cuba.tomcat.dir/webapps/${modulePrefix}-core" )
+    delete("$cuba.tomcat.dir/webapps/${modulePrefix}" )
 }
 
-task restart(dependsOn: ['stop', ':sessioninfo-core:deploy', ':sessioninfo-web:deploy'], description: 'Redeploys applications and restarts local Tomcat') {
+task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy" , ":${modulePrefix}-web:deploy" ], description: 'Redeploys applications and restarts local Tomcat') {
     doLast {
         ant.waitfor(maxwait: 6, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
             not {
