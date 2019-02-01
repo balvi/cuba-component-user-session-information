@@ -60,7 +60,7 @@ class SessionDataLoader {
         createKeyValueEntity([
                 'entityName'   : entityCaption,
                 'operationType': messages.getMessage(constraintData.operationType),
-                'code'        : constraintData.code,
+                'code'         : constraintData.code,
                 'joinClause'   : constraintData.join,
                 'groovyScript' : constraintData.groovyScript,
                 'checkType'    : messages.getMessage(constraintData.checkType),
