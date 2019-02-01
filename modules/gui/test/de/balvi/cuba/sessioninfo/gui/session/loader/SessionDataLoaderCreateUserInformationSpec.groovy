@@ -3,6 +3,7 @@ package de.balvi.cuba.sessioninfo.gui.session.loader
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.Messages
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.global.MetadataTools
 import com.haulmont.cuba.core.global.UserSessionSource
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.User
@@ -11,43 +12,32 @@ import de.balvi.cuba.sessioninfo.gui.session.SessionDataLoader
 import spock.lang.Specification
 
 class SessionDataLoaderCreateUserInformationSpec extends Specification {
-
-
     SessionDataLoader sut
-    Metadata metadata
-    Messages messages
-    UserSession userSession
-    Group group
-    User user
+    Metadata metadata = Mock(Metadata)
+    MetadataTools metadataTools = Mock(MetadataTools)
+    Messages messages = Mock(Messages)
+    UserSession userSession = Mock(UserSession)
+    Group group = Mock(Group)
+    User user = Mock(User)
 
 
     def setup() {
-
-        metadata = Mock(Metadata)
-        messages = Mock(Messages)
         sut = new SessionDataLoader(
                 metadata: metadata,
                 messages: messages,
+                metadataTools: metadataTools
         )
 
-        userSession = Mock(UserSession)
+        metadataTools.getInstanceName(user) >> 'My User'
+        metadataTools.getInstanceName(group) >> 'My Group'
 
-
-        user = Mock(User)
-        user.getInstanceName() >> "My User"
-
-        group = Mock(Group)
-        group.getInstanceName() >> "My Group"
         user.getGroup() >> group
 
         userSession.getUser() >> user
         userSession.getRoles() >> ['role1', 'role2']
-
-
     }
 
     def "createUserInformation creates a list of KV-Entities with user information"() {
-
         when:
         def result = sut.createUserInformation(userSession)
 
@@ -57,7 +47,6 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
     }
 
     def "createUserInformation returns the user as an entry"() {
-
         given:
         messages.getMessage(SessionDataLoader, 'tables.userinformation.user') >> "User"
 
@@ -70,7 +59,6 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
     }
 
     def "createUserInformation returns an empty substituted user if there is no user substitution available"() {
-
         given:
         messages.getMessage(SessionDataLoader, 'tables.userinformation.substitutedUser') >> "Substituted User"
 
@@ -83,13 +71,12 @@ class SessionDataLoaderCreateUserInformationSpec extends Specification {
     }
 
     def "createUserInformation returns the substituted user if there is a user substitution available"() {
-
         given:
         messages.getMessage(SessionDataLoader, 'tables.userinformation.substitutedUser') >> "Substituted User"
 
         and:
         def substituierterBenutzer = Mock(User)
-        substituierterBenutzer.getInstanceName() >> "My substituted User"
+        metadataTools.getInstanceName(substituierterBenutzer) >> 'My substituted User'
         userSession.getSubstitutedUser() >> substituierterBenutzer
 
         when:

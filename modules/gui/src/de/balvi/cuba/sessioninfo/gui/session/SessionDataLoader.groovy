@@ -5,6 +5,7 @@ import com.haulmont.cuba.core.entity.Entity
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.Messages
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.global.MetadataTools
 import com.haulmont.cuba.security.entity.PermissionType
 import com.haulmont.cuba.security.global.ConstraintData
 import com.haulmont.cuba.security.global.UserSession
@@ -16,13 +17,12 @@ import javax.inject.Inject
 @CompileStatic
 @Component
 class SessionDataLoader {
-
     @Inject Metadata metadata
+    @Inject MetadataTools metadataTools
     @Inject Messages messages
     @Inject MetadataHelper metadataHelper
 
     List<KeyValueEntity> createUserInformation(UserSession userSession) {
-
         [
                 createKeyValueEntity(getMessage('tables.userinformation.user'), userSession.user),
                 createKeyValueEntity(getMessage('tables.userinformation.substitutedUser'), userSession.substitutedUser),
@@ -38,16 +38,9 @@ class SessionDataLoader {
     List<KeyValueEntity> createSessionAttribute(UserSession userSession) {
         def entities = []
         userSession.attributeNames.each {
-            def entity = new KeyValueEntity()
-            entity.setValue(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME, it)
-
-            def wert = userSession.getAttribute(it)
-            if (Entity.isAssignableFrom(wert.class)) {
-                entity.setValue(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_VALUE, ((Instance) wert).instanceName)
-            } else {
-                entity.setValue(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_VALUE, wert.toString())
-            }
-            entities << entity
+            def value = userSession.getAttribute(it)
+            String valueString = getStringValue(value)
+            entities << createKeyValueEntity(it, valueString)
         }
         entities
     }
@@ -112,21 +105,16 @@ class SessionDataLoader {
     }
 
     private KeyValueEntity createKeyValueEntity(Map<String, Object> content) {
-        def result = new KeyValueEntity()
+        def entity = new KeyValueEntity()
         content.each { k, v ->
-            def wert = ''
-            if (v) {
-                if (isEntity(v)) {
-                    wert = ((Instance) v).instanceName
-                } else {
-                    wert = v.toString()
-                }
-            }
-
-            result.setValue(k, wert)
-
+            entity.setValue(k, getStringValue(v))
         }
-        result
+        entity
+    }
+
+    private String getStringValue(def value) {
+        if (!value) { return '' }
+        isEntity(value) ? metadataTools.getInstanceName((Instance) value) : value.toString()
     }
 
     protected boolean isEntity(Object value) {
