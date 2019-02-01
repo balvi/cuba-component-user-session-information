@@ -105,5 +105,4 @@ class SessionDataLoaderCreatePermissionsSpec extends Specification {
         2               || 'modify'
         0               || 'hide'
     }
-
 }

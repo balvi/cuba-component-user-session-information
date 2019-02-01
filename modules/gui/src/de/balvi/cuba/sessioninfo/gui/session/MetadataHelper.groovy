@@ -11,14 +11,11 @@ import javax.inject.Inject
 
 @Component
 class MetadataHelper {
-
     @Inject
     Metadata metadata
 
-
     @Inject
     Messages messages
-
 
     Map<String, String> getEntityCaptionMap() {
         metadataTools.allPersistentMetaClasses?.collectEntries { [(getEntityCaption(it)): it.name] }

@@ -4,17 +4,20 @@ import com.haulmont.chile.core.model.MetaClass
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.core.global.MetadataTools
-import com.haulmont.cuba.gui.WindowParam
 import com.haulmont.cuba.gui.components.AbstractWindow
 import com.haulmont.cuba.gui.components.BoxLayout
 import com.haulmont.cuba.gui.components.Table
 import com.haulmont.cuba.gui.data.DsBuilder
 import com.haulmont.cuba.gui.data.impl.ValueCollectionDatasourceImpl
+import com.haulmont.cuba.gui.screen.UiController
+import com.haulmont.cuba.gui.screen.UiDescriptor
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory
 import com.haulmont.cuba.security.global.UserSession
 
 import javax.inject.Inject
 
+@UiController('sessioninfo$userSessionInformation')
+@UiDescriptor('user-session-information.xml')
 class UserSessionInformation extends AbstractWindow {
     @Inject ComponentsFactory componentsFactory
     @Inject Metadata metadata
@@ -28,7 +31,7 @@ class UserSessionInformation extends AbstractWindow {
     @Inject BoxLayout constraintsTableBox
     @Inject BoxLayout permissionsTableBox
 
-    @WindowParam UserSession userSessionToDisplay
+    UserSession userSessionToDisplay
 
     Table userTable
     Table sessionTable
@@ -37,8 +40,8 @@ class UserSessionInformation extends AbstractWindow {
 
     @Override
     void init(Map<String, Object> params) {
-
         userSessionToDisplay = userSessionToDisplay ?: userSession
+
         initCaption()
         def keyValueTableColumns = [
                 (UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME) : getMessage('tables.columns.attribute'),

@@ -5,8 +5,7 @@
         messagesPack="de.balvi.cuba.sessioninfo.gui.session">
     <dialogMode height="600"
                 width="800"
-                forceDialog="true"
-    />
+                forceDialog="true"/>
     <layout>
         <tabSheet id="sessionTabSheet"
                   height="100%">

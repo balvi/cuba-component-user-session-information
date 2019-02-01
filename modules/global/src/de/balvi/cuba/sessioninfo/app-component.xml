@@ -17,14 +17,14 @@
             name="core">
         <artifact appJar="true"
                   name="sessioninfo-core"/>
-        <property name="cuba.springContextConfig"
-                  value="+de/balvi/cuba/sessioninfo/spring.xml"/>
-        <property name="cuba.mainMessagePack"
-                  value="+de.balvi.cuba.sessioninfo.core"/>
         <artifact classifier="db"
                   configuration="dbscripts"
                   ext="zip"
                   name="sessioninfo-core"/>
+        <property name="cuba.springContextConfig"
+                  value="+de/balvi/cuba/sessioninfo/spring.xml"/>
+        <property name="cuba.mainMessagePack"
+                  value="+de.balvi.cuba.sessioninfo.core"/>
     </module>
     <module blocks="web,desktop"
             dependsOn="global"

@@ -3,7 +3,6 @@ package de.balvi.cuba.sessioninfo.gui.session
 import javax.annotation.Nullable
 
 enum PermissionValueEnum {
-
     YES(1, 'font-icon:CHECK_SQUARE_O'),
     NO(0, 'font-icon:SQUARE_O')
 
@@ -14,7 +13,6 @@ enum PermissionValueEnum {
         this.id = value
         this.icon = icon
     }
-
 
     @Nullable
     static PermissionValueEnum fromId(Integer id) {
