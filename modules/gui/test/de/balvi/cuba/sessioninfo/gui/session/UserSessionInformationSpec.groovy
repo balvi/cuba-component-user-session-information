@@ -37,8 +37,6 @@ class UserSessionInformationSpec extends Specification {
                 window: window,
                 metadataTools: metadataTools
         )
-
-//        frame.getMessagesPack() >> 'de.balvi.cuba.sessioninfo.gui.session'
     }
 
     def "init uses the current user session in case there is no given user session to display"() {
@@ -78,7 +76,7 @@ class UserSessionInformationSpec extends Specification {
         sut.init([:])
 
         then:
-        1 * sessionTableCreator.createTable(_,sut.userTableBox,userDs,_, _)
+        1 * sessionTableCreator.createTable(sut.userTableBox,userDs,_, _)
     }
 
 
@@ -115,7 +113,7 @@ class UserSessionInformationSpec extends Specification {
         when:
         sut.init([:])
         then:
-        1 * sessionTableCreator.createTable(_,sut.sessionTableBox,sessionDs,_, _)
+        1 * sessionTableCreator.createTable(sut.sessionTableBox,sessionDs,_, _)
     }
 
     def "init adds the columns 'attribute' and 'value' to the session attribute table"() {
@@ -153,7 +151,7 @@ class UserSessionInformationSpec extends Specification {
         when:
         sut.init([:])
         then:
-        1 * sessionTableCreator.createTable(_,sut.permissionsTableBox,permissionsDs,_, _)
+        1 * sessionTableCreator.createTable(sut.permissionsTableBox,permissionsDs,_, _)
     }
 
 
@@ -193,7 +191,7 @@ class UserSessionInformationSpec extends Specification {
         when:
         sut.init([:])
         then:
-        1 * sessionTableCreator.createTable(_,sut.constraintsTableBox,constraintsDs,_, _)
+        1 * sessionTableCreator.createTable(sut.constraintsTableBox,constraintsDs,_, _)
     }
 
     def "init adds the all columns of a Constraint to the constraint datasource"() {

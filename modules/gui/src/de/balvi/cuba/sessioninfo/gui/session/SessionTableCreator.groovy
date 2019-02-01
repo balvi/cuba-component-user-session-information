@@ -1,38 +1,28 @@
 package de.balvi.cuba.sessioninfo.gui.session
 
 import com.haulmont.chile.core.model.MetaClass
-import com.haulmont.cuba.core.global.Messages
+import com.haulmont.cuba.gui.UiComponents
 import com.haulmont.cuba.gui.components.BoxLayout
 import com.haulmont.cuba.gui.components.Frame
 import com.haulmont.cuba.gui.components.Table
 import com.haulmont.cuba.gui.data.impl.ValueCollectionDatasourceImpl
-import com.haulmont.cuba.gui.xml.layout.ComponentsFactory
 import org.springframework.stereotype.Component
 
 import javax.inject.Inject
 
 @Component
 class SessionTableCreator {
-
     @Inject
-    ComponentsFactory componentsFactory
+    UiComponents uiComponents
 
-    @Inject
-    Messages messages
-
-    Table createTable(Table table, BoxLayout tableBox, ValueCollectionDatasourceImpl tableDs, Frame frame, Map<String, String> columnCaptions) {
-        if (table) {
-            tableBox.remove(table)
-        }
-
-        def newTable = componentsFactory.createComponent(Table)
+    Table createTable(BoxLayout tableBox, ValueCollectionDatasourceImpl tableDs, Frame frame, Map<String, String> columnCaptions) {
+        Table newTable = uiComponents.create(Table)
 
         configureTableEnvironment(tableDs, newTable, frame, tableBox)
         configureTableLayout(tableDs, newTable,columnCaptions)
         configureTableSettings(newTable)
 
         newTable
-
     }
 
     protected void configureTableEnvironment(ValueCollectionDatasourceImpl tableDs, Table table, Frame frame, BoxLayout tableBox) {
@@ -47,11 +37,13 @@ class SessionTableCreator {
     }
 
     protected void configureTableSettings(Table table) {
-        table.settingsEnabled = false
-        table.columnReorderingAllowed = false
-        table.contextMenuEnabled = false
-        table.sortable = false
-        table.columnControlVisible = false
+        table.with {
+            settingsEnabled = false
+            columnReorderingAllowed = false
+            contextMenuEnabled = false
+            sortable = false
+            columnControlVisible = false
+        }
     }
 
     private void addTableColumns(ValueCollectionDatasourceImpl tableDs, Table table, Map<String, String> columnCaptions) {
@@ -63,5 +55,4 @@ class SessionTableCreator {
             table.addColumn(column)
         }
     }
-
 }

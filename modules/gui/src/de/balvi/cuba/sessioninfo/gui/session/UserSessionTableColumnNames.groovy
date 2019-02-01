@@ -1,7 +1,6 @@
 package de.balvi.cuba.sessioninfo.gui.session
 
 interface UserSessionTableColumnNames {
-
     static final String SESSION_TABLE_COLUMN_VALUE = 'value'
     static final String SESSION_TABLE_COLUMN_NAME = 'attribute'
 
