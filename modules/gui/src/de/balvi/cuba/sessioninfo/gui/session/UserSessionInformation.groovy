@@ -3,6 +3,7 @@ package de.balvi.cuba.sessioninfo.gui.session
 import com.haulmont.chile.core.model.MetaClass
 import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.global.MetadataTools
 import com.haulmont.cuba.gui.WindowParam
 import com.haulmont.cuba.gui.components.AbstractWindow
 import com.haulmont.cuba.gui.components.BoxLayout
@@ -15,10 +16,9 @@ import com.haulmont.cuba.security.global.UserSession
 import javax.inject.Inject
 
 class UserSessionInformation extends AbstractWindow {
-
-
     @Inject ComponentsFactory componentsFactory
     @Inject Metadata metadata
+    @Inject MetadataTools metadataTools
     @Inject SessionTableCreator sessionTableCreator
     @Inject SessionDataLoader sessionDataLoader
     @Inject UserSession userSession
@@ -51,7 +51,8 @@ class UserSessionInformation extends AbstractWindow {
     }
 
     protected initCaption() {
-        caption = formatMessage('caption', userSessionToDisplay?.currentOrSubstitutedUser?.instanceName)
+        String userSessionName = metadataTools.getInstanceName(userSessionToDisplay?.currentOrSubstitutedUser)
+        caption = formatMessage('caption', userSessionName)
     }
 
     protected Table initUserTable(Map<String, String> tableColumns) {
@@ -123,5 +124,4 @@ class UserSessionInformation extends AbstractWindow {
         DsBuilder.create(dsContext).reset().setAllowCommit(false)
                 .buildValuesCollectionDatasource()
     }
-
 }

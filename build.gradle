@@ -1,5 +1,5 @@
 buildscript {
-    ext.cubaVersion = '6.10.5'
+    ext.cubaVersion = '7.0.0'
     repositories {
         maven {
             url 'https://repo.cuba-platform.com/content/groups/work'
@@ -12,7 +12,7 @@ buildscript {
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
-        classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.5.0'
     }
 }
 
@@ -25,7 +25,6 @@ def webModule = project(":${modulePrefix}-web" )
 
 def servletApi = 'javax.servlet:javax.servlet-api:3.1.0'
 
-apply(plugin: 'idea')
 apply(plugin: 'cuba')
 
 def bintrayRepositoryUrl = "https://api.bintray.com/maven/balvi/cuba-components/cuba-component-user-session-information/;publish=1"
@@ -66,24 +65,29 @@ allprojects {
     apply plugin: 'net.saliman.cobertura'
 }
 
-def files = subprojects
-        .findAll { !it.name.toLowerCase().contains('theme') }
-        .collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
-def sourceDirs = subprojects
-        .findAll { !it.name.toLowerCase().contains('theme') }
-        .collect { new File(it.projectDir, '/src') }
 cobertura {
+    def coverageFiles = []
+    def sourceDirs = []
+    final LINE_COVERAGE_MIN_VALUE = 85
+    final BRANCH_COVERAGE_MIN_VALUE = 65
+
+    subprojects.each {
+        String name = it.name.toLowerCase()
+        if (!name.contains('theme')) {
+            if (!name.contains('docs')) {
+                coverageFiles << new File(it.projectDir, '/build/cobertura/cobertura.ser')
+            }
+            sourceDirs << new File(it.projectDir, '/src')
+        }
+    }
     coverageFormats = ['html', 'xml']
-    coverageMergeDatafiles = files
-    coverageCheckTotalBranchRate = 65
-    coverageCheckTotalLineRate = 85
+    coverageMergeDatafiles = coverageFiles
+    coverageCheckTotalBranchRate = BRANCH_COVERAGE_MIN_VALUE
+    coverageCheckTotalLineRate = LINE_COVERAGE_MIN_VALUE
     coverageCheckHaltOnFailure = true
     coverageSourceDirs = sourceDirs
-//    coverageCheckLineRate = 1
     coverageCheckRegexes = [[regex: '.*\\$.*', branchRate: 0, lineRate: 0]]
-
 }
-
 
 test.dependsOn(subprojects.collect { ":${it.name}:test" })
 test.finalizedBy(project.tasks.cobertura)
@@ -92,7 +96,6 @@ test.finalizedBy(project.tasks.coberturaCheck)
 configure([globalModule, coreModule, guiModule, webModule]) {
     apply(plugin: 'java')
     apply(plugin: 'maven')
-    apply(plugin: 'idea')
     apply(plugin: 'cuba')
 
     dependencies {
@@ -160,7 +163,6 @@ configure(globalModule) {
         main { enabled = true }
     }
 
-
     jar {
         manifest {
             attributes('App-Component-Id': cuba.artifact.group)
@@ -171,7 +173,6 @@ configure(globalModule) {
 }
 
 configure(coreModule) {
-
     configurations {
         jdbc
         dbscripts
@@ -179,7 +180,7 @@ configure(coreModule) {
 
     dependencies {
         compile(globalModule)
-        provided(servletApi)
+        compileOnly(servletApi)
         jdbc(hsql)
         testRuntime(hsql)
 
@@ -199,6 +200,10 @@ configure(coreModule) {
     task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
         appName = "${modulePrefix}-core"
         appJars(modulePrefix + '-global', modulePrefix + '-core')
+    }
+
+    task startDb(type: CubaHsqlStart) {
+        dbName = 'sessioninfo'
     }
 
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
@@ -237,7 +242,7 @@ configure(webModule) {
     }
 
     dependencies {
-        provided(servletApi)
+        compileOnly(servletApi)
         compile(guiModule)
 
     }
@@ -281,9 +286,6 @@ configure(webModule) {
 }
 
 
-
-
-
 task undeploy(type: Delete, dependsOn: ":${modulePrefix}-web:cleanConf" ) {
     delete("$cuba.tomcat.dir/shared")
     delete("$cuba.tomcat.dir/webapps/${modulePrefix}-core" )
@@ -297,12 +299,9 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy" , ":${modulePref
                 socket(server: 'localhost', port: '8787')
             }
         }
-        start.execute()
     }
+    restart.finalizedBy(project.tasks.start)
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
-}
 
 apply from: 'extra.gradle'

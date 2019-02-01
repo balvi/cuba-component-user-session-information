@@ -77,7 +77,7 @@ class SessionDataLoader {
 
     List<KeyValueEntity> createPermissions(UserSession userSession) {
         def entities = []
-        PermissionType.values().each { PermissionType permissionType ->
+        for (PermissionType permissionType : PermissionType.values()) {
             def permissions = userSession.getPermissionsByType(permissionType)
 
             permissions?.each { permissionName, permissionValue ->

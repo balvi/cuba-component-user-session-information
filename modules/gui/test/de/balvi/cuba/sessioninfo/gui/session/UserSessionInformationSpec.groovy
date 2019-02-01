@@ -5,44 +5,40 @@ import com.haulmont.cuba.core.entity.KeyValueEntity
 import com.haulmont.cuba.core.global.MessageTools
 import com.haulmont.cuba.core.global.Messages
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.global.MetadataTools
 import com.haulmont.cuba.gui.components.BoxLayout
-import com.haulmont.cuba.gui.components.Frame
+import com.haulmont.cuba.gui.components.Window
 import com.haulmont.cuba.gui.data.impl.ValueCollectionDatasourceImpl
 import com.haulmont.cuba.security.global.UserSession
 import spock.lang.Specification
 
 class UserSessionInformationSpec extends Specification {
-
-
     UserSessionInformationMock sut
-    SessionTableCreator sessionTableCreator
-    SessionDataLoader sessionDataLoader
-    Frame frame
-    Metadata metadata
-    private Messages messages
-    private MessageTools messageTools
+
+    SessionTableCreator sessionTableCreator = Mock(SessionTableCreator)
+    SessionDataLoader sessionDataLoader = Mock(SessionDataLoader)
+    Window window = Mock(Window)
+    Metadata metadata = Mock(Metadata)
+    MetadataTools metadataTools = Mock(MetadataTools)
+    Messages messages = Mock(Messages)
+    MessageTools messageTools = Mock(MessageTools)
+
 
     def setup() {
-
-        sessionTableCreator = Mock(SessionTableCreator)
-        sessionDataLoader = Mock(SessionDataLoader)
-        metadata = Mock(Metadata)
         metadata.getSession() >> Mock(Session)
-        messages = Mock(Messages)
-        messageTools = Mock(MessageTools)
         messages.getTools() >> messageTools
+
         sut = new UserSessionInformationMock(
                 sessionTableCreator: sessionTableCreator,
                 sessionDataLoader: sessionDataLoader,
                 datasource: Mock(ValueCollectionDatasourceImpl),
                 metadata: metadata,
-                messages: messages
+                messages: messages,
+                window: window,
+                metadataTools: metadataTools
         )
 
-        frame = Mock(Frame)
-        frame.getMessagesPack() >> 'de.balvi.cuba.sessioninfo.gui.session'
-        sut.setWrappedFrame(frame)
-
+//        frame.getMessagesPack() >> 'de.balvi.cuba.sessioninfo.gui.session'
     }
 
     def "init uses the current user session in case there is no given user session to display"() {
@@ -60,9 +56,10 @@ class UserSessionInformationSpec extends Specification {
     def "init uses the given user session in case there is one"() {
         given:
         def userSessionToDisplay = Mock(UserSession)
+
         when:
         sut.userSessionToDisplay = userSessionToDisplay
-        sut.init()
+        sut.init([:])
 
         then:
         1 * sessionDataLoader.createUserInformation(userSessionToDisplay)
@@ -72,11 +69,14 @@ class UserSessionInformationSpec extends Specification {
     def "init creates a table for the user information"() {
         given:
         sut.userTableBox = Mock(BoxLayout)
+
         and:
         def userDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = userDs
+
         when:
-        sut.init()
+        sut.init([:])
+
         then:
         1 * sessionTableCreator.createTable(_,sut.userTableBox,userDs,_, _)
     }
@@ -87,7 +87,7 @@ class UserSessionInformationSpec extends Specification {
         def userDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = userDs
         when:
-        sut.init()
+        sut.init([:])
         then:
         (1.._) * userDs.addProperty(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME)
         (1.._) * userDs.addProperty(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_VALUE)
@@ -101,7 +101,7 @@ class UserSessionInformationSpec extends Specification {
         and:
         sessionDataLoader.createUserInformation(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
-        sut.init()
+        sut.init([:])
         then:
         2 * userDs.includeItem(_ as KeyValueEntity)
     }
@@ -113,7 +113,7 @@ class UserSessionInformationSpec extends Specification {
         def sessionDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = sessionDs
         when:
-        sut.init()
+        sut.init([:])
         then:
         1 * sessionTableCreator.createTable(_,sut.sessionTableBox,sessionDs,_, _)
     }
@@ -123,7 +123,7 @@ class UserSessionInformationSpec extends Specification {
         def sessionDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = sessionDs
         when:
-        sut.init()
+        sut.init([:])
         then:
         (1.._) * sessionDs.addProperty(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_NAME)
         (1.._) * sessionDs.addProperty(UserSessionTableColumnNames.SESSION_TABLE_COLUMN_VALUE)
@@ -137,7 +137,7 @@ class UserSessionInformationSpec extends Specification {
         and:
         sessionDataLoader.createSessionAttribute(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
-        sut.init()
+        sut.init([:])
         then:
         2 * sessionDs.includeItem(_ as KeyValueEntity)
     }
@@ -151,7 +151,7 @@ class UserSessionInformationSpec extends Specification {
         def permissionsDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = permissionsDs
         when:
-        sut.init()
+        sut.init([:])
         then:
         1 * sessionTableCreator.createTable(_,sut.permissionsTableBox,permissionsDs,_, _)
     }
@@ -162,7 +162,7 @@ class UserSessionInformationSpec extends Specification {
         def permissionDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = permissionDs
         when:
-        sut.init()
+        sut.init([:])
         then:
         1 * permissionDs.addProperty(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_TYPE)
         1 * permissionDs.addProperty(UserSessionTableColumnNames.PERMISSION_TABLE_COLUMN_PERMISSION_ALLOWED)
@@ -177,7 +177,7 @@ class UserSessionInformationSpec extends Specification {
         and:
         sessionDataLoader.createPermissions(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
-        sut.init()
+        sut.init([:])
         then:
         2 * permissionDs.includeItem(_ as KeyValueEntity)
     }
@@ -191,7 +191,7 @@ class UserSessionInformationSpec extends Specification {
         def constraintsDs = Mock(ValueCollectionDatasourceImpl)
         sut.datasource = constraintsDs
         when:
-        sut.init()
+        sut.init([:])
         then:
         1 * sessionTableCreator.createTable(_,sut.constraintsTableBox,constraintsDs,_, _)
     }
@@ -205,7 +205,7 @@ class UserSessionInformationSpec extends Specification {
         messageTools.getPropertyCaption(_,_) >> {k,v -> v}
 
         when:
-        sut.init()
+        sut.init([:])
 
         then:
         1 * constraintsDs.addProperty('entityName')
@@ -225,17 +225,25 @@ class UserSessionInformationSpec extends Specification {
         and:
         sessionDataLoader.createConstraints(_) >> [Mock(KeyValueEntity), Mock(KeyValueEntity)]
         when:
-        sut.init()
+        sut.init([:])
         then:
         2 * permissionDs.includeItem(_ as KeyValueEntity)
     }
-
-
 }
 
 class UserSessionInformationMock extends UserSessionInformation {
-
     ValueCollectionDatasourceImpl datasource
+
+    @Override
+    protected String formatMessage(String key, Object... params) {
+        "something"
+    }
+
+    @Override
+    protected String getMessage(String key) {
+        "something"
+    }
+
     @Override
     protected ValueCollectionDatasourceImpl createValueCollectionDs() {
         datasource
