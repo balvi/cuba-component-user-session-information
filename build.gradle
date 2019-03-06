@@ -32,7 +32,7 @@ cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
         version = '0.8.1'
-        isSnapshot = true
+        isSnapshot = false
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"

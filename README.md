@@ -43,7 +43,7 @@ CUBA component that shows detailed information about user sessions. The main pur
 | 6.5.x            | 0.2.x          |
 | 6.4.x            | 0.1.x          |
 
-The latest version is: `0.8.0`
+The latest version is: `0.8.1`
 
 Add custom application component to your project:
 
