@@ -9,12 +9,7 @@
     <layout>
         <tabSheet id="sessionTabSheet"
                   height="100%">
-            <tab id="userTab"
-                 ca
-                 p
-                 tion="msg://user"
-                 m
-                 argin="true,false,true,false">
+            <tab id="userTab" caption="msg://user" margin="true,false,true,false">
                 <vbox id="userTableBox"
                       height="100%"/>
             </tab>

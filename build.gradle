@@ -8,11 +8,10 @@ buildscript {
                 password(rootProject.hasProperty('repoPass') ? rootProject['repoPass'] : 'cuba123')
             }
         }
-
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
-        classpath 'net.saliman:gradle-cobertura-plugin:2.5.0'
+        classpath "net.saliman:gradle-cobertura-plugin:2.6.0"
     }
 }
 
@@ -32,8 +31,8 @@ def bintrayRepositoryUrl = "https://api.bintray.com/maven/balvi/cuba-components/
 cuba {
     artifact {
         group = 'de.balvi.cuba.sessioninfo'
-        version = '0.8.0'
-        isSnapshot = false
+        version = '0.8.1'
+        isSnapshot = true
     }
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
